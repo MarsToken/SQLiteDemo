@@ -174,12 +174,13 @@ public class SQLiteDatabaseDAO {
         return null;
     }
 
+    //location is version 2 add
     public synchronized void selectAllCountry() {
         SQLiteDatabase db = mHelper.getReadableDatabase();
         try {
             Cursor cursor = db.query(SQLiteHelper.NAME_COUNTRY, null, null, null, null, null, null);
             if (null != cursor && cursor.getCount() > 0) {
-                while (cursor.moveToNext()) {
+                while (cursor.moveToNext()) {//数据库升级时，如果是删除，则删除必要的元素
                     Log.e(getClass().getName(), "countryId=" + cursor.getString(cursor.getColumnIndex("countryId"))
                             + "countryName=" + cursor.getString(cursor.getColumnIndex("countryName")));
                 }

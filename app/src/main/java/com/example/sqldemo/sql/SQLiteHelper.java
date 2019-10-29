@@ -60,17 +60,27 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "'甘宁',3)");
     }
 
-    //只更新国家的
-    //创建临时表，缓存上个版本的旧数据
+    //加字段更新方法1：只更新国家的 此方法可以 修改，增加或删除字段名称
+    //创建临时表，缓存上个版本的旧数据,以删除countryName,只保留countryName举例
     private String CREATE_TEMP_COUNTRY = "alter table " + NAME_COUNTRY + " rename to temp_country";
     //创建新数据库
-    private String CREATE_UPDATE_COUNTRY = "create table " + NAME_COUNTRY + "(countryId INTEGER PRIMARY KEY AUTOINCREMENT,countryName TEXT,personId" +
-            " INTEGER,sex INTEGER)";
-    //将临时表里的数据插入到新数据库
-    private String INSERT_DATA = "insert into " + NAME_COUNTRY + " select *,'' from temp_country";
+    private String CREATE_UPDATE_COUNTRY = "create table " + NAME_COUNTRY + "(countryId INTEGER PRIMARY KEY AUTOINCREMENT)";
+    //将临时表里的数据插入到新数据库 //select * ,'' from temp_country
+    private String INSERT_DATA = "insert into " + NAME_COUNTRY + " select countryId from temp_country";
     //删除临时数据库
-    private String DROP_TEMP_BOOK = "drop table temp_country";
+    private String DROP_TEMP_COUNTRY = "drop table temp_country";
 
+    //加字段更新方法2：只更新国家的 此方法只能 添加字段或修改字段名称，以增加举例
+    private static String ADD_COUNTRY = "alter table country add column location INTEGER";
+
+    //或者方法3:同样是删除
+    private String CREATE_TEMP_COUNTRY2 = "create table temp_country as select countryId from country";
+    private String DROP_OLD_COUNTRY = "drop table country";
+    private String RENAME_COUNTRY = "alter table temp_country rename to country";
+
+    //create table temp as select recordId, customer, place, time from record where 1 = 1;
+    //drop table record;
+    //alter table temp rename to record;
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.e(getClass().getName(), "onUpgrade! oldVersion=" + oldVersion + ",newVersion=" + newVersion);
@@ -78,12 +88,24 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         try {
             if (newVersion > oldVersion) {
                 db.beginTransaction();
-                db.execSQL(CREATE_TEMP_COUNTRY);
-                db.execSQL(CREATE_UPDATE_COUNTRY);
-                db.execSQL(INSERT_DATA);
-                db.execSQL(DROP_TEMP_BOOK);
+                //way 1
+//                db.execSQL(CREATE_TEMP_COUNTRY);
+//                db.execSQL(CREATE_UPDATE_COUNTRY);
+//                db.execSQL(INSERT_DATA);
+//                db.execSQL(DROP_TEMP_COUNTRY);
+
+
                 //添加字段的具体值，需要修改ben类添加字段，比如设置sex=1
                 //SQLiteDatabaseDAO.getInstance(this).updateCountryById("1");
+                //way 2
+//                db.execSQL(ADD_COUNTRY);
+//                db.execSQL("update country set location=100 where countryId=1");
+
+
+                //way 3
+                db.execSQL(CREATE_TEMP_COUNTRY2);
+                db.execSQL(DROP_OLD_COUNTRY);
+                db.execSQL(RENAME_COUNTRY);
                 db.setTransactionSuccessful();
             }
         } catch (Exception e) {

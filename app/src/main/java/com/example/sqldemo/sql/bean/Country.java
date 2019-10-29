@@ -11,12 +11,15 @@ public class Country {
 
     public int countryId;
     public String countryName;
+    //update,version 2 add
+    public int location;
 
     @Override
     public String toString() {
         return "Country{" +
-                "countryId='" + countryId + '\'' +
+                "countryId=" + countryId +
                 ", countryName='" + countryName + '\'' +
+                ", location=" + location +
                 '}';
     }
 }
