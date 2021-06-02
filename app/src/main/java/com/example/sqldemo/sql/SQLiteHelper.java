@@ -48,7 +48,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private String createCountryTable = "CREATE TABLE " + NAME_COUNTRY + "(countryId INTEGER PRIMARY KEY AUTOINCREMENT,countryName TEXT)";
     private String createPersonTable = "create table " + NAME_PERSON +
             "(personId INTEGER PRIMARY KEY AUTOINCREMENT,personName TEXT,countryId INTEGER,foreign key(countryId) references "//foreign 指定关联字段，名字可以不一样
-            + NAME_COUNTRY + "(countryId) on update cascade on delete cascade)";
+            + NAME_COUNTRY + "(countryId) on delete cascade)";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -56,7 +56,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(createCountryTable);
         db.execSQL(createPersonTable);
         db.execSQL("insert into country(countryId,countryName) values (1,'魏'),(2,'蜀'),(3,'吴')");
-        db.execSQL("insert into person(personId,personName,countryId) values (11,'曹操',1),(12,'刘备',2),(13,'孙权',3),(14,'夏侯惇',1),(15,'诸葛亮',2),(16," +
+        db.execSQL("insert into person(personId,personName,countryId) values (1,'曹操',1),(2,'刘备',2),(3,'孙权',3),(4,'夏侯惇',1),(5,'诸葛亮',2),(6," +
                 "'甘宁',3)");
     }
 
@@ -114,6 +114,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             if (null != db) {
                 db.endTransaction();
             }
+        }
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            db.execSQL("PRAGMA foreign_keys = ON;");//外键默认是关闭的
         }
     }
 }

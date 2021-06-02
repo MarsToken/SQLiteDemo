@@ -1,6 +1,9 @@
 package com.example.sqldemo;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -60,14 +63,14 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add:
-                //SQLiteDatabaseDAO.getInstance(this).insertPerson("111", "夏侯渊", "1");
+                SQLiteDatabaseDAO.getInstance(this).insertPerson(100, "夏侯渊", 3);
                 break;
             case R.id.btn_del:
                 //SQLiteDatabaseDAO.getInstance(this).deletePersonById("111");
-                SQLiteDatabaseDAO.getInstance(this).deleteCountryById("3");
+                SQLiteDatabaseDAO.getInstance(this).deleteCountryById("2");
                 break;
             case R.id.btn_update:
-                SQLiteDatabaseDAO.getInstance(this).updatePersonById("111");
+                SQLiteDatabaseDAO.getInstance(this).updatePersonById("100");
                 break;
             case R.id.btn_search:
 //                Country country = SQLiteDatabaseDAO.getInstance(this).selectCountryById("2");

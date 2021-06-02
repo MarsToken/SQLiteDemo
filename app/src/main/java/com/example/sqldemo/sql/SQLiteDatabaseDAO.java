@@ -67,7 +67,7 @@ public class SQLiteDatabaseDAO {
         try {
             db.beginTransaction();
             Person person = selectPersonById(id);//查找
-            ContentValues target = buildPerson(person.personId, "王二", 1);//修改+插入
+            ContentValues target = buildPerson(person.personId, "王二", 2);//修改+插入
             db.update(SQLiteHelper.NAME_PERSON, target, "personId=?", new String[]{person.personId + ""});
             db.setTransactionSuccessful();
         } catch (Exception e) {
@@ -90,6 +90,7 @@ public class SQLiteDatabaseDAO {
     }
 
     public synchronized void selectAllPerson() {
+        Log.e("tag", "search all person");
         SQLiteDatabase db = mHelper.getReadableDatabase();
         try {
             Cursor cursor = db.query(SQLiteHelper.NAME_PERSON, null, null, null, null, null, null);
@@ -176,6 +177,7 @@ public class SQLiteDatabaseDAO {
 
     //location is version 2 add
     public synchronized void selectAllCountry() {
+        Log.e("tag", "search all country");
         SQLiteDatabase db = mHelper.getReadableDatabase();
         try {
             Cursor cursor = db.query(SQLiteHelper.NAME_COUNTRY, null, null, null, null, null, null);
